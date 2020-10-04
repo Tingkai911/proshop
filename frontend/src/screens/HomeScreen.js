@@ -7,13 +7,12 @@ export default function HomeScreen() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
+    const fetchProducts = async () => {
+      const { data } = await axios.get("/api/products");
+      setProducts(data);
+    };
     fetchProducts();
   }, []);
-
-  const fetchProducts = async () => {
-    const { data } = await axios.get("/api/products");
-    setProducts(data);
-  };
 
   return (
     <>
