@@ -1,5 +1,9 @@
 import axios from "axios";
 import {
+  USER_DETAILS_FAIL,
+  USER_DETAILS_REQUEST,
+  USER_DETAILS_RESET,
+  USER_DETAILS_SUCCESS,
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
   USER_LOGIN_SUCCESS,
@@ -15,7 +19,7 @@ export const login = (email, password) => async (dispatch) => {
       type: USER_LOGIN_REQUEST,
     });
 
-    // To send the content type and the token in the header
+    // To send the content type in the header
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -49,6 +53,8 @@ export const login = (email, password) => async (dispatch) => {
 export const logout = () => (dispatch) => {
   localStorage.removeItem("userInfo");
   dispatch({ type: USER_LOGOUT });
+  dispatch({ type: USER_DETAILS_RESET });
+  document.location.href = "/login";
 };
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -57,7 +63,7 @@ export const register = (name, email, password) => async (dispatch) => {
       type: USER_REGISTER_REQUEST,
     });
 
-    // To send the content type and the token in the header
+    // To send the content type in the header
     const config = {
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +83,6 @@ export const register = (name, email, password) => async (dispatch) => {
     });
 
     // Login the user right away after registration
-
     dispatch({
       type: USER_LOGIN_SUCCESS,
       payload: data,
@@ -87,6 +92,42 @@ export const register = (name, email, password) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: USER_REGISTER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message // From custom error handler
+          : error.message, // Default error message in express js
+    });
+  }
+};
+
+export const getUserDetails = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_DETAILS_REQUEST,
+    });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    // To send the content type and the token in the header
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    // Send the request to the backend
+    const { data } = await axios.get(`/api/users/${id}`, config);
+
+    dispatch({
+      type: USER_DETAILS_SUCCESS,
+      payload: data,
+    });
+  } catch (error) {
+    dispatch({
+      type: USER_DETAILS_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message // From custom error handler
