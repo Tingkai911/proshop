@@ -11,6 +11,10 @@ import {
   USER_REGISTER_FAIL,
   USER_REGISTER_REQUEST,
   USER_REGISTER_SUCCESS,
+  USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_PROFILE_REQUEST,
+  USER_UPDATE_PROFILE_RESET,
+  USER_UPDATE_PROFILE_SUCCESS,
 } from "../constants/userConstants";
 
 export const login = (email, password) => async (dispatch) => {
@@ -106,6 +110,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
       type: USER_DETAILS_REQUEST,
     });
 
+    // Get the token
     const {
       userLogin: { userInfo },
     } = getState();
@@ -118,7 +123,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
       },
     };
 
-    // Send the request to the backend
+    // Send the request to the backend to get the user details
     const { data } = await axios.get(`/api/users/${id}`, config);
 
     dispatch({
@@ -132,6 +137,60 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
         error.response && error.response.data.message
           ? error.response.data.message // From custom error handler
           : error.message, // Default error message in express js
+    });
+  }
+};
+
+export const updateUserProfile = (user) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_UPDATE_PROFILE_REQUEST,
+    });
+
+    // Get the token
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    // To send the content type and the token in the header
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    // Send request to update the user profile
+    const { data } = await axios.put(`/api/users/profile`, user, config);
+    console.log(data);
+
+    dispatch({
+      type: USER_UPDATE_PROFILE_SUCCESS,
+      payload: data,
+    });
+
+    // Login the user again with the new user profile
+    // must pass in the token to login
+    dispatch({
+      type: USER_LOGIN_SUCCESS,
+      payload: { ...data, token: userInfo.token },
+    });
+
+    localStorage.setItem(
+      "userInfo",
+      JSON.stringify({ ...data, token: userInfo.token })
+    );
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    if (message === "Not authorized, token failed") {
+      dispatch(logout());
+    }
+    dispatch({
+      type: USER_UPDATE_PROFILE_FAIL,
+      payload: message,
     });
   }
 };
