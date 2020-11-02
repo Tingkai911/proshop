@@ -65,7 +65,7 @@ export default function ProfileScreen({ history, location }) {
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="name"
-              placehiolder="Enter name"
+              placeholder="Enter name"
               value={name}
               onChange={(e) => setName(e.target.value)}
             ></Form.Control>
@@ -74,7 +74,7 @@ export default function ProfileScreen({ history, location }) {
             <Form.Label>Email Address</Form.Label>
             <Form.Control
               type="email"
-              placehiolder="Enter email"
+              placeholder="Enter email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             ></Form.Control>
@@ -83,7 +83,7 @@ export default function ProfileScreen({ history, location }) {
             <Form.Label>Password</Form.Label>
             <Form.Control
               type="password"
-              placehiolder="Enter password"
+              placeholder="Enter password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             ></Form.Control>
@@ -92,7 +92,7 @@ export default function ProfileScreen({ history, location }) {
             <Form.Label>Confirm Password</Form.Label>
             <Form.Control
               type="password"
-              placehiolder="Confirm password"
+              placeholder="Confirm password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
             ></Form.Control>
