@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { PayPalButton } from "react-paypal-button-v2";
-import { Button, Row, Col, ListGroup, Image, Card } from "react-bootstrap";
+import { Row, Col, ListGroup, Image, Card } from "react-bootstrap";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import Message from "../components/Message";
@@ -38,7 +38,7 @@ export default function OrderScreen({ match }) {
 
     // If there is no order or the orderId changes or we have paid for the orders successfully, want to fetch the new order details
     if (!order || order._id !== orderId || successPay) {
-      dispatch({ type: ORDER_PAY_RESET });
+      dispatch({ type: ORDER_PAY_RESET }); // Need this or else there will be infinite useEffect() loop
       dispatch(getOrderDetails(orderId));
     } else if (!order.isPaid) {
       // Add the PayPal script is it is not added
