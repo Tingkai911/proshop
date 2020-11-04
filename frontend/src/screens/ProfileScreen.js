@@ -38,12 +38,12 @@ export default function ProfileScreen({ history, location }) {
         dispatch({ type: USER_UPDATE_PROFILE_RESET });
         // If there is no user state = the profile page is empty, go to GET /api/users/profile
         dispatch(getUserDetails("profile"));
-        dispatch(listMyOrders());
       } else {
         // If there is already a user, setState() to fill up the form
         setName(user.name);
         setEmail(user.email);
       }
+      dispatch(listMyOrders());
     }
   }, [dispatch, history, userInfo, user, success]);
 

@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import Message from "../components/Message";
 import CheckoutSteps from "../components/CheckoutSteps";
 import { createOrder } from "../actions/orderActions";
+import { ORDER_CREATE_RESET } from "../constants/orderConstants";
+import { CART_RESET } from "../constants/cartConstants";
 
 export default function PlaceOrderScreen({ history }) {
   const dispatch = useDispatch();
@@ -35,7 +37,11 @@ export default function PlaceOrderScreen({ history }) {
   useEffect(() => {
     if (success) {
       history.push(`/order/${order._id}`);
+      dispatch({ type: ORDER_CREATE_RESET });
+      dispatch({ type: CART_RESET });
+      localStorage.removeItem("cartItems");
     }
+    // eslint-disable-next-line
   }, [history, success]);
 
   const placeOrderHandler = () => {
