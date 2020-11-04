@@ -70,7 +70,6 @@ export const getOrderDetails = (id) => async (dispatch, getState) => {
 
     // Send request to get the order by id
     const { data } = await axios.get(`/api/orders/${id}`, config);
-    console.log(data);
 
     dispatch({
       type: ORDER_DETAILS_SUCCESS,
@@ -116,7 +115,6 @@ export const payOrder = (orderId, paymentResult) => async (
       paymentResult,
       config
     );
-    console.log(data);
 
     dispatch({
       type: ORDER_PAY_SUCCESS,
