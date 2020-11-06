@@ -222,7 +222,7 @@ export const listUsers = () => async (dispatch, getState) => {
     };
 
     // Send request to update the user profile
-    const { data } = await axios.get("/api/users", config);
+    const { data } = await axios.get(`/api/users`, config);
 
     dispatch({
       type: USER_LIST_SUCCESS,
