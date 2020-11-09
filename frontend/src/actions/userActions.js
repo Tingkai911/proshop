@@ -184,13 +184,10 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     // must pass in the token to login
     dispatch({
       type: USER_LOGIN_SUCCESS,
-      payload: { ...data, token: userInfo.token },
+      payload: data,
     });
 
-    localStorage.setItem(
-      "userInfo",
-      JSON.stringify({ ...data, token: userInfo.token })
-    );
+    localStorage.setItem("userInfo", JSON.stringify(data));
   } catch (error) {
     const message =
       error.response && error.response.data.message
