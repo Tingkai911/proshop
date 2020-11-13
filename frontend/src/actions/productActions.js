@@ -6,6 +6,9 @@ import {
   PRODUCT_DETAILS_REQUEST,
   PRODUCT_DETAILS_SUCCESS,
   PRODUCT_DETAILS_FAIL,
+  PRODUCT_DELETE_REQUEST,
+  PRODUCT_DELETE_SUCCESS,
+  PRODUCT_DELETE_FAIL,
 } from "../constants/productConstants";
 
 export const listProducts = () => async (dispatch) => {
@@ -36,6 +39,42 @@ export const listProductDetails = (id) => async (dispatch) => {
         error.response && error.response.data.message
           ? error.response.data.message // From custom error handler
           : error.message, // Default error message in express js
+    });
+  }
+};
+
+export const deleteProduct = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: PRODUCT_DELETE_REQUEST,
+    });
+
+    // Get the token
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    // To send the content type and the token in the header
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    // Send get request to delete a product by id
+    await axios.delete(`/api/products/${id}`, config);
+
+    dispatch({
+      type: PRODUCT_DELETE_SUCCESS,
+    });
+  } catch (error) {
+    const message =
+      error.response && error.response.data.message
+        ? error.response.data.message
+        : error.message;
+    dispatch({
+      type: PRODUCT_DELETE_FAIL,
+      payload: message,
     });
   }
 };
