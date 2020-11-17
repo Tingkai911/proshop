@@ -104,7 +104,7 @@ export const createProduct = () => async (dispatch, getState) => {
       },
     };
 
-    // Send post request to create a product (need to send an empty object here in a put request)
+    // Send post request to create a product (need to send an empty object here in a post request)
     const { data } = await axios.post(`/api/products/`, {}, config);
 
     dispatch({
