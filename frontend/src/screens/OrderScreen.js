@@ -65,7 +65,7 @@ export default function OrderScreen({ match, history }) {
         setSdkReady(true);
       }
     }
-  }, [dispatch, order, orderId, successPay, successDeliver]);
+  }, [dispatch, order, orderId, successPay, successDeliver, history, userInfo]);
 
   const addDecimals = (num) => {
     return (Math.round(num * 100) / 100).toFixed(2);
