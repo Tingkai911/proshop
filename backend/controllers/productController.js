@@ -5,7 +5,19 @@ import Product from "../models/productModel.js";
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
-  const products = await Product.find({});
+  // Get keyword from query string if it exist
+  const keyword = req.query.keyword
+    ? {
+        name: {
+          $regex: req.query.keyword, // Use regular expression
+          $options: "i", // Case insensitive
+        },
+      }
+    : {};
+
+  // Takes in $regex and $option to perform search on the database
+  const products = await Product.find({ ...keyword });
+
   res.json(products);
 });
 
