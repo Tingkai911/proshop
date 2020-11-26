@@ -5,6 +5,12 @@ import Product from "../models/productModel.js";
 // @route   GET /api/products
 // @access  Public
 const getProducts = asyncHandler(async (req, res) => {
+  // How many products per page
+  const pageSize = 10;
+
+  // The current page, page = 1 by default
+  const page = Number(req.query.pageNumber) || 1;
+
   // Get keyword from query string if it exist
   const keyword = req.query.keyword
     ? {
@@ -15,10 +21,16 @@ const getProducts = asyncHandler(async (req, res) => {
       }
     : {};
 
-  // Takes in $regex and $option to perform search on the database
-  const products = await Product.find({ ...keyword });
+  // Count how may products match the keyword
+  const count = await Product.countDocuments({ ...keyword });
 
-  res.json(products);
+  // Takes in $regex and $option to perform search on the database
+  const products = await Product.find({ ...keyword })
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
+
+  // Respond with the products, the current page number and the total number of pages
+  res.json({ products, page, pages: Math.ceil(count / pageSize) });
 });
 
 // @desc    Fetch single product by id

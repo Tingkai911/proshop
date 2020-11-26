@@ -25,6 +25,8 @@ export default function Header() {
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
+            {/* Do not add the <SearchBox /> component directly as it will not have access to the history props that way */}
+            {/* Use a render prop */}
             <Route render={({ history }) => <SearchBox history={history} />} />
             <Nav className="ml-auto">
               <LinkContainer to="/cart">
