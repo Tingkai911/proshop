@@ -61,6 +61,9 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
   const order = await Order.findById(req.params.id);
 
   if (order) {
+    // Need to double confirm everything in the user's order is in stock first before charging them in actual implementation
+    // However, for this demo, I will just leave it out as we are not updating stock count
+
     order.isPaid = true;
     order.paidAt = Date.now();
 
@@ -73,6 +76,9 @@ const updateOrderToPaid = asyncHandler(async (req, res) => {
     };
 
     const updatedOrder = await order.save();
+
+    // Need to update the stock count once the user have paid here in actual site
+    // However, for this demo, I will not update the stock count so that most of the products will be in stock for those who want to try the website
 
     res.json(updatedOrder);
   } else {
