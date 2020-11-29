@@ -23,10 +23,6 @@ if (process.env.NODE_ENV === "development") {
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("API is running...");
-});
-
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/orders", orderRoutes);
@@ -40,6 +36,21 @@ app.get("/api/config/paypal", (req, res) =>
 // Make the uploads folder a static folder to upload our images
 const __dirname = path.resolve();
 app.use("/uploads", express.static(path.join(__dirname, "/uploads")));
+
+if (process.env.NODE_ENV === "production") {
+  // Make the build folder a static folder
+  app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+  // Any routes that is not any of the above will come here and load our index.html
+  app.get("*", (req, res) =>
+    res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"))
+  );
+} else {
+  // In development
+  app.get("/", (req, res) => {
+    res.send("API is running...");
+  });
+}
 
 app.use(notFound);
 app.use(errorHandler);
