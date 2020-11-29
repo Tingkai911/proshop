@@ -8,3 +8,5 @@ This project is build using MERN stack and has the functions of a ecommerce webs
 - Product rating & review system
 - Admin area to manage customers, products & orders
 - Product search, carousel, pagination & more
+
+Project is currently deployed in https://tingkai911-proshop.herokuapp.com/
